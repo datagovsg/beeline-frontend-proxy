@@ -3,7 +3,7 @@ const http = require('http')
 
 const httpProxy = require('http-proxy')
 
-const CRAWLER_USER_AGENTS = /facebookexternalhit|Facebot|Twitterbot|Pinterest|Google.*snippet/
+const CRAWLER_USER_AGENTS = /facebookexternalhit|Facebot|Twitterbot|Pinterest|Googlebot|Google.*snippet|Google-StructuredDataTestingTool/
 
 const { ROBOTS_URL, BACKEND_URL, PORT } = process.env
 
