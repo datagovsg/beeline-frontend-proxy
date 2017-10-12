@@ -1,0 +1,29 @@
+{
+  "name": "beeline-proxy-frontend",
+  "version": "0.0.1",
+  "description": "Proxies requests for the Cordova frontend, redirecting crawlers to SEO payloads",
+  "repository": "https://github.com/datagovsg/beeline-frontend-proxy",
+  "engines": {
+    "node": "8.x.x"
+  },
+  "main": "node src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "watch": "nodemon -x node src/index.js",
+    "lint": "eslint --fix src/"
+  },
+  "author": "Government Technology Agency of Singapore (https://www.tech.gov.sg)",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "dispatch": "^1.0.1",
+    "http-proxy": "^1.16.2"
+  },
+  "devDependencies": {
+    "eslint": "^4.8.0",
+    "eslint-config-airbnb": "^16.0.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.4.0",
+    "nodemon": "^1.12.1"
+  }
+}

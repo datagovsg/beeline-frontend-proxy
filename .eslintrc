@@ -1,0 +1,12 @@
+{
+    "env": {
+        "es6": true,
+        "node": true
+    },
+    "extends": "eslint-config-airbnb",
+    "rules": {
+      "semi": [2, "never"],
+      "no-console": 0,
+      "space-before-function-paren": [2, "always"]
+    }
+}
