@@ -16,15 +16,12 @@ const proxy = httpProxy.createProxyServer({
 })
 
 function shouldRedirect (url) {
-  return url.startsWith('/tabs/route')
+  return url.startsWith('/tabs/route') || url.startsWith('/tabs/crowdstart')
 }
 
 function rewrite (url) {
-  const routeIdURLFrom = (u) => {
-    const [routeId] = u.match(/\d+/) || []
-    return routeId ? `/routes/${routeId}` : '/routes'
-  }
-  return url === '/tabs/routes' ? '/routes' : routeIdURLFrom(url)
+  const [routeId] = url.match(/\d+/) || []
+  return routeId ? `/routes/${routeId}` : '/routes'
 }
 
 const listener = (req, res) => {
