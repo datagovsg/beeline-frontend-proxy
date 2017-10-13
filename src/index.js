@@ -30,7 +30,7 @@ const listener = (req, res) => {
 
   if (robotAgent && shouldRedirect(url)) {
     req.url = rewrite(url)
-    proxy.web(req, res, { target: ROBOTS_URL })
+    proxy.web(req, res, { ignorePath: false, target: ROBOTS_URL })
   } else {
     const ignorePath = url.match(/\./) === null
     proxy.web(req, res, { ignorePath, target: BACKEND_URL })
