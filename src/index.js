@@ -26,9 +26,9 @@ const listener = async (req, res) => {
 
   if (robotAgent && shouldRedirect(url)) {
     const [routeId] = url.match(/\d+/) || []
-    const robotsPath = routeId ? `/routes/${routeId}` : '/routes'
-    const makeHTML = routeId ? makeOpenGraphForRoute : makeRouteIndex
-    const payload = await axios.get(ROBOTS_URL + robotsPath).then(r => makeHTML(r.data))
+    const payload = routeId
+      ? await axios.get(`${ROBOTS_URL}/routes/${routeId}`).then(r => makeOpenGraphForRoute(r.data))
+      : await axios.get(`${ROBOTS_URL}/routes`).then(r => makeRouteIndex(r.data))
     res.end(payload)
   } else {
     const ignorePath = url.match(/\./) === null

@@ -1,12 +1,10 @@
-
-const BlueBird = require('bluebird')
 const fs = require('fs')
 const Handlebars = require('handlebars')
 const path = require('path')
 const _ = require('lodash')
 
 const htmlFrom = async (payload, templateFileName) => {
-  const templateText = await BlueBird.promisify(fs.readFile)(
+  const templateText = fs.readFileSync(
     path.join(path.dirname(module.filename), `../static/${templateFileName}`),
     'utf8',
   )
