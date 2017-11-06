@@ -4,7 +4,7 @@ const axios = require('axios')
 const httpProxy = require('http-proxy')
 const { makeOpenGraphForRoute, makeRouteIndex } = require('./openGraph')
 
-const CRAWLER_USER_AGENTS = /facebookexternalhit|Facebot|Twitterbot|Pinterest|Googlebot|Google.*snippet|Google-Structured/
+const CRAWLER_USER_AGENTS = /facebookexternalhit|Facebot|Slackbot|Twitterbot|Pinterest|Googlebot|Google.*snippet|Google-Structured/
 
 const { ROBOTS_URL, BACKEND_URL, PORT } = process.env
 
