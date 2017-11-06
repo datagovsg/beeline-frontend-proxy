@@ -16,6 +16,8 @@ const proxy = httpProxy.createProxyServer({
   changeOrigin: true,
 })
 
+const isTabPath = ({ url }) => url.match(/\./) === null && url.match(/tabs/) !== null
+
 function shouldRedirect (url) {
   return url.startsWith('/tabs/route') || url.startsWith('/tabs/crowdstart')
 }
@@ -30,9 +32,11 @@ const listener = async (req, res) => {
       ? await axios.get(`${ROBOTS_URL}/routes/${routeId}`).then(r => makeOpenGraphForRoute(r.data))
       : await axios.get(`${ROBOTS_URL}/routes`).then(r => makeRouteIndex(r.data))
     res.end(payload)
+  } else if (isTabPath(req)) {
+    const payload = await axios.get(BACKEND_URL).then(r => r.data)
+    res.end(payload.replace('<head>', '<head><base href="/" />'))
   } else {
-    const ignorePath = url.match(/\./) === null && url.match(/(CNAME|apple-app-site-association)/) === null
-    proxy.web(req, res, { ignorePath, target: BACKEND_URL })
+    proxy.web(req, res, { ignorePath: false, target: BACKEND_URL })
   }
 }
 
