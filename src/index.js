@@ -31,7 +31,7 @@ const listener = async (req, res) => {
       : await axios.get(`${ROBOTS_URL}/routes`).then(r => makeRouteIndex(r.data))
     res.end(payload)
   } else {
-    const ignorePath = url.match(/\./) === null
+    const ignorePath = url.match(/\./) === null && url.match(/(CNAME|apple-app-site-association)/) === null
     proxy.web(req, res, { ignorePath, target: BACKEND_URL })
   }
 }
