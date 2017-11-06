@@ -25,8 +25,8 @@ function shouldRedirect (url) {
 const listener = async (req, res) => {
   const { url } = req
   const [robotAgent] = (req.headers['user-agent'] || '').match(CRAWLER_USER_AGENTS) || []
-  console.log(`Receiving request from ${req.headers['user-agent']}`)
   if (robotAgent && shouldRedirect(url)) {
+    console.log(`Receiving request from ${req.headers['user-agent']}`)
     const [routeId] = url.match(/\d+/) || []
     const payload = routeId
       ? await axios.get(`${ROBOTS_URL}/routes/${routeId}`).then(r => makeOpenGraphForRoute(r.data))
