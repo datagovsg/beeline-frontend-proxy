@@ -16,7 +16,7 @@ const proxy = httpProxy.createProxyServer({
   changeOrigin: true,
 })
 
-const isTabPath = ({ url }) => url.match(/\./) === null && url.match(/tabs/) !== null
+const isTabPath = ({ url }) => url.match(/\./) === null && url.startsWith('/tabs')
 
 function shouldRedirect (url) {
   return url.startsWith('/tabs/route') || url.startsWith('/tabs/crowdstart')
