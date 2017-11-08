@@ -1,0 +1,27 @@
+<svg version="1.1"
+     baseProfile="full"
+     width="1200" height="630"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns="http://www.w3.org/2000/svg">
+   <style>
+     text {
+       text-anchor: middle;
+       font-family: Avenir, Arial;
+       fill: rgb(80, 54, 101);
+     }
+     .label {
+       font-size: 36px;
+       fill: white;
+     }
+     .label .number {
+       font-weight: 600;
+     }
+     .location {
+       font-size: 26px;
+       font-weight: 600;
+     }
+   </style>
+   <image x="0" y="0" width="1200" height="630" xlink:href="https://www.beeline.sg/images/fb_hero_large.png"/>
+   <!-- <text class="label" x="1318" y="153">{{{label.prefix}}}<tspan class="number">{{{label.number}}}</tspan></text>
+   <text class="location" x="1470" y="150">{{{label.location}}}</text> -->
+ </svg>

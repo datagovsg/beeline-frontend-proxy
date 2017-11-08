@@ -12,6 +12,9 @@ const htmlFrom = async (payload, templateFileName) => {
   return template(payload)
 }
 
+// we are in effect just using a template to make a payload, so this alias is safe
+const svgFrom = htmlFrom
+
 const makeRouteIndexHTML = (data) => {
   const routeIdsAndTags = _.filter(data, r => _.intersection(r.tags, ['lite', 'failed', 'success']).length === 0)
   const crowdstartOrRoute = row => (row.tags.includes('crowdstart') ? `crowdstart/${row.id}/detail` : `route/${row.id}`)
@@ -33,5 +36,23 @@ const makeOpenGraphForRoute = async (route) => {
   return htmlFrom(_.assign({ urlPath, verb }, route), 'og-route.html')
 }
 
+const gmtToSGTString = dateTimeString => dateTimeString.replace('Z', '+0800')
 
-module.exports = { makeOpenGraphForRoute, makeRouteIndex }
+const makeRouteBanner = async (route) => {
+  const isCrowdstart = route.tags.includes('crowdstart')
+  const firstStopTime = new Date(route.trip.tripStops[0].time)
+  const tripDate = new Date(gmtToSGTString(route.trip.date))
+  const isMorning = firstStopTime.getTime() - tripDate.getTime() < 12 * 3600 * 1000
+  const payload = {
+    route,
+    isCrowdstart,
+    label: {
+      prefix: route.label.charAt(0),
+      number: route.label.substring(1),
+      location: isMorning ? route.from : route.to,
+    },
+  }
+  return svgFrom(payload, 'route-banner.svg')
+}
+
+module.exports = { makeOpenGraphForRoute, makeRouteIndex, makeRouteBanner }

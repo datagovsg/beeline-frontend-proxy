@@ -2,7 +2,7 @@ const assert = require('assert')
 const http = require('http')
 const axios = require('axios')
 const httpProxy = require('http-proxy')
-const { makeOpenGraphForRoute, makeRouteIndex } = require('./openGraph')
+const { makeOpenGraphForRoute, makeRouteIndex, makeRouteBanner } = require('./openGraph')
 
 const CRAWLER_USER_AGENTS = /facebookexternalhit|Facebot|Slackbot|TelegramBot|WhatsApp|Twitterbot|Pinterest|Googlebot|Google.*snippet|Google-Structured/
 
@@ -16,11 +16,9 @@ const proxy = httpProxy.createProxyServer({
   changeOrigin: true,
 })
 
-const isTabPath = ({ url }) => url.match(/\./) === null && url.startsWith('/tabs')
-
-function shouldRedirect (url) {
-  return url.startsWith('/tabs/route') || url.startsWith('/tabs/crowdstart')
-}
+const shouldRedirect = url => url.startsWith('/tabs/route') || url.startsWith('/tabs/crowdstart')
+const isTabPath = url => url.match(/\./) === null && url.startsWith('/tabs')
+const isRouteBanner = url => url.startsWith('/images/banners/routes/')
 
 const listener = async (req, res) => {
   const { url } = req
@@ -32,9 +30,26 @@ const listener = async (req, res) => {
       ? await axios.get(`${ROBOTS_URL}/routes/${routeId}`).then(r => makeOpenGraphForRoute(r.data))
       : await axios.get(`${ROBOTS_URL}/routes`).then(r => makeRouteIndex(r.data))
     res.end(payload)
-  } else if (isTabPath(req)) {
+  } else if (isTabPath(url)) {
     const payload = await axios.get(BACKEND_URL).then(r => r.data)
     res.end(payload.replace('<head>', '<head><base href="/" />'))
+  } else if (isRouteBanner(url)) {
+    const [routeId] = url.match(/\d+/) || []
+    if (!routeId) {
+      res.writeHead(404, { 'Content-Type': 'text/plain' })
+      res.end(`${url} not found`)
+    } else {
+      const route = await axios.get(`${ROBOTS_URL}/routes/${routeId}?includeIndicative=true&includeTrips=false`).then(r => r.data)
+      const { nextTripId } = route.indicativeTrip
+      const trip = await axios.get(`${ROBOTS_URL}/trips/${nextTripId}`).then(r => r.data)
+      const payload = trip ? await makeRouteBanner(Object.assign(route, { trip })) : undefined
+      if (!payload) {
+        res.writeHead(400, { 'Content-Type': 'text/plain' })
+        res.end(`${url} refers to a route with no trip`)
+      }
+      res.setHeader('Content-Type', 'image/svg+xml')
+      res.end(payload)
+    }
   } else {
     proxy.web(req, res, { ignorePath: false, target: BACKEND_URL })
   }
