@@ -2,6 +2,7 @@ const assert = require('assert')
 const http = require('http')
 const axios = require('axios')
 const httpProxy = require('http-proxy')
+const svg2png = require('svg2png')
 const { makeOpenGraphForRoute, makeRouteIndex, makeRouteBanner } = require('./openGraph')
 
 const CRAWLER_USER_AGENTS = /facebookexternalhit|Facebot|Slackbot|TelegramBot|WhatsApp|Twitterbot|Pinterest|Googlebot|Google.*snippet|Google-Structured/
@@ -46,9 +47,11 @@ const listener = async (req, res) => {
       if (!payload) {
         res.writeHead(400, { 'Content-Type': 'text/plain' })
         res.end(`${url} refers to a route with no trip`)
+      } else {
+        res.setHeader('Content-Type', 'image/png')
+        const png = await svg2png(Buffer.from(payload, 'utf8'))
+        res.end(png)
       }
-      res.setHeader('Content-Type', 'image/svg+xml')
-      res.end(payload)
     }
   } else {
     proxy.web(req, res, { ignorePath: false, target: BACKEND_URL })

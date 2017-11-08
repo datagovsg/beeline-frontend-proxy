@@ -19,7 +19,8 @@
     "dispatch": "^1.0.1",
     "handlebars": "^4.0.10",
     "http-proxy": "^1.16.2",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "svg2png": "^4.1.1"
   },
   "devDependencies": {
     "eslint": "^4.8.0",
