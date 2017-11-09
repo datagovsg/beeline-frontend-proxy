@@ -48,9 +48,15 @@ const listener = async (req, res) => {
         res.writeHead(400, { 'Content-Type': 'text/plain' })
         res.end(`${url} refers to a route with no trip`)
       } else {
-        res.setHeader('Content-Type', 'image/png')
-        const png = await svg2png(Buffer.from(payload, 'utf8'))
-        res.end(png)
+        const [, ext] = url.match(/\.(.*)$/) || []
+        if (ext === 'png') {
+          res.setHeader('Content-Type', 'image/png')
+          const png = await svg2png(Buffer.from(payload, 'utf8'))
+          res.end(png)
+        } else {
+          res.setHeader('Content-Type', 'image/svg+xml')
+          res.end(payload)
+        }
       }
     }
   } else {
