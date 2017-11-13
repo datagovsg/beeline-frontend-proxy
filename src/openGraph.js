@@ -38,14 +38,30 @@ const makeOpenGraphForRoute = async (route) => {
 
 const gmtToSGTString = dateTimeString => dateTimeString.replace('Z', '+0800')
 
+const makeStopLabel = (tripStop) => {
+  const time = new Date(tripStop.time)
+    .toLocaleTimeString('en-SG', { timeZone: 'Asia/Singapore' })
+    .replace(/:\d{2} /, ' ')
+    .toLowerCase()
+  const name = tripStop.stop.description.replace(/ \(.*\)$/, '')
+  const isBoard = tripStop.canBoard && !tripStop.canAlight
+  return { time, name, isBoard }
+}
+
 const makeRouteBanner = async (route) => {
   const isCrowdstart = route.tags.includes('crowdstart')
   const firstStopTime = new Date(route.trip.tripStops[0].time)
   const tripDate = new Date(gmtToSGTString(route.trip.date))
   const isMorning = firstStopTime.getTime() - tripDate.getTime() < 12 * 3600 * 1000
+  const [board, alight] = _(route.trip.tripStops)
+    .map(makeStopLabel)
+    .partition(s => s.isBoard)
+    .value()
   const payload = {
     route,
     isCrowdstart,
+    board,
+    alight,
     label: {
       prefix: route.label.charAt(0),
       number: route.label.substring(1),

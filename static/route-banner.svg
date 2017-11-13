@@ -1,27 +1,45 @@
 <svg version="1.1"
      baseProfile="full"
-     width="1200" height="630"
+     width="1960" height="1026"
      xmlns:xlink="http://www.w3.org/1999/xlink"
      xmlns="http://www.w3.org/2000/svg">
    <style>
+     :root {
+       --beeline-purple: rgb(80, 54, 101);
+       --bus-stop-teal: rgb(75, 165, 156);
+       --bus-stop-pink: rgb(223, 101, 56);
+     }
      text {
        text-anchor: middle;
        font-family: Avenir, Arial;
-       fill: rgb(80, 54, 101);
+       fill: var(--beeline-purple);
      }
      .label {
        font-size: 36px;
        fill: white;
      }
      .label .number {
-       font-weight: 600;
+       font-weight: bolder;
      }
      .location {
        font-size: 26px;
-       font-weight: 600;
+       font-weight: bolder;
+     }
+     circle.stop {
+       r: 8;
+       stroke: var(--beeline-purple);
+       stroke-width: 4.5;
+       fill: white;
+     }
+     circle.stop.board {
+       fill: var(--bus-stop-teal);
+     }
+     circle.stop.alight {
+       fill: var(--bus-stop-pink);
      }
    </style>
-   <image x="0" y="0" width="1200" height="630" xlink:href="https://www.beeline.sg/images/fb_hero_large.png"/>
-   <!-- <text class="label" x="1318" y="153">{{{label.prefix}}}<tspan class="number">{{{label.number}}}</tspan></text>
-   <text class="location" x="1470" y="150">{{{label.location}}}</text> -->
+   <image x="0" y="0" width="1960" height="1026" xlink:href="https://cdn.pbrd.co/images/GSFC1T1.png"/>
+   <text class="label" x="1318" y="153">{{{label.prefix}}}<tspan class="number">{{{label.number}}}</tspan></text>
+   <text class="location" x="1470" y="150">{{{label.location}}}</text>
+   <circle class="stop board" cx="1319" cy="200"/>
  </svg>
