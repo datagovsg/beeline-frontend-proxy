@@ -6,7 +6,7 @@ const svg2png = require('svg2png')
 const { parse } = require('url')
 const { makeOpenGraphForRoute, makeRouteIndex, makeRouteBanner } = require('./openGraph')
 
-const CRAWLER_USER_AGENTS = /facebookexternalhit|Facebot|Slackbot|TelegramBot|WhatsApp|Twitterbot|Pinterest|Googlebot|Google.*snippet|Google-Structured/
+const CRAWLER_USER_AGENTS = /facebookexternalhit|Facebot|Slackbot|TelegramBot|WhatsApp|Twitterbot|Pinterest/
 
 const { ROBOTS_URL, BACKEND_URL, PORT } = process.env
 
