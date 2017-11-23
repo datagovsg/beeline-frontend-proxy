@@ -1,6 +1,6 @@
 <svg version="1.1"
      baseProfile="full"
-     width="1200" height="630"
+     width="1200" height="{{{height}}}"
      xmlns:xlink="http://www.w3.org/1999/xlink"
      xmlns="http://www.w3.org/2000/svg">
    <style>
@@ -21,7 +21,7 @@
        font-weight: 600;
      }
    </style>
-   <image x="0" y="0" width="1200" height="630" xlink:href="https://www.beeline.sg/images/fb_hero_large.png"/>
+   <image x="0" y="0" width="1200" height="{{{height}}}" xlink:href="{{{bannerPath}}}"/>
    <!-- <text class="label" x="1318" y="153">{{{label.prefix}}}<tspan class="number">{{{label.number}}}</tspan></text>
    <text class="location" x="1470" y="150">{{{label.location}}}</text> -->
  </svg>

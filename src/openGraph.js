@@ -2,6 +2,7 @@ const fs = require('fs')
 const Handlebars = require('handlebars')
 const path = require('path')
 const _ = require('lodash')
+const querystring = require('querystring')
 
 const htmlFrom = async (payload, templateFileName) => {
   const templateText = fs.readFileSync(
@@ -29,16 +30,27 @@ const makeRouteIndex = async (data) => {
   return htmlFrom(payload, 'og-route-index.html')
 }
 
-const makeOpenGraphForRoute = async (route) => {
+const makeOpenGraphForRoute = async (route, operatorQuery) => {
   const isCrowdstart = route.tags.includes('crowdstart')
   const urlPath = isCrowdstart ? `crowdstart/${route.id}/detail` : `route/${route.id}`
   const verb = isCrowdstart ? 'Crowdstart' : 'Book'
-  return htmlFrom(_.assign({ urlPath, verb }, route), 'og-route.html')
+  const app = operatorQuery.operator === 'grab' ? 'GrabShuttle' : 'Beeline'
+  const smallHero = operatorQuery.operator === 'grab'
+    ? 'https://app.beeline.sg/grab/mstile-310x310.png'
+    : 'https://www.beeline.sg/images/fb_hero_small.png'
+  const payload = {
+    operatorQuery: operatorQuery ? `?${querystring.stringify(operatorQuery)}` : '',
+    smallHero,
+    urlPath,
+    verb,
+    app,
+  }
+  return htmlFrom(_.assign(payload, route), 'og-route.html')
 }
 
 const gmtToSGTString = dateTimeString => dateTimeString.replace('Z', '+0800')
 
-const makeRouteBanner = async (route) => {
+const makeRouteBanner = async (route, operatorQuery) => {
   const isCrowdstart = route.tags.includes('crowdstart')
   const firstStopTime = new Date(route.trip.tripStops[0].time)
   const tripDate = new Date(gmtToSGTString(route.trip.date))
@@ -51,6 +63,10 @@ const makeRouteBanner = async (route) => {
       number: route.label.substring(1),
       location: isMorning ? route.from : route.to,
     },
+    height: (operatorQuery.operator === 'grab') ? 479 : 630,
+    bannerPath: (operatorQuery.operator === 'grab')
+      ? 'https://www.beeline.sg/images/fb_gs_hero_large.jpg'
+      : 'https://www.beeline.sg/images/fb_hero_large.png',
   }
   return svgFrom(payload, 'route-banner.svg')
 }
