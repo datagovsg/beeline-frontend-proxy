@@ -4,7 +4,11 @@ const axios = require('axios')
 const httpProxy = require('http-proxy')
 const svg2png = require('svg2png')
 const { parse } = require('url')
-const { makeOpenGraphForRoute, makeRouteIndex, makeRouteBanner } = require('./openGraph')
+const {
+  makeOpenGraphForRoute,
+  makeRouteBanner,
+  makeRouteSitemap,
+} = require('./openGraph')
 
 const CRAWLER_USER_AGENTS = /facebookexternalhit|Facebot|Slackbot|TelegramBot|WhatsApp|Twitterbot|Pinterest/
 
@@ -31,9 +35,17 @@ const listener = async (req, res) => {
   if (robotAgent && shouldRedirect(url)) {
     console.log(`Receiving request from ${req.headers['user-agent']}`)
     const [routeId] = url.match(/\d+/) || []
-    const payload = routeId
-      ? await axios.get(`${ROBOTS_URL}/routes/${routeId}`).then(r => makeOpenGraphForRoute(r.data, query))
-      : await axios.get(`${ROBOTS_URL}/routes`).then(r => makeRouteIndex(r.data))
+    if (!routeId) {
+      res.writeHead(404, { 'Content-Type': 'text/plain' })
+      res.end(`${url} not found`)
+    } else {
+      const payload =
+        await axios.get(`${ROBOTS_URL}/routes/${routeId}`).then(r => makeOpenGraphForRoute(r.data, query))
+      res.end(payload)
+    }
+  } else if (pathname === '/sitemap.txt') {
+    const payload = await axios.get(`${ROBOTS_URL}/routes`).then(r => makeRouteSitemap(r.data))
+    res.writeHead(200, { 'Content-Type': 'text/plain' })
     res.end(payload)
   } else if (isTabPath(url) || pathname === '/') {
     const payload = await axios.get(BACKEND_URL + (isGrab ? '/grab.html' : '')).then(r => r.data)
