@@ -25,16 +25,17 @@ const makeRouteSitemap = (data) => {
     .join('\n')
 }
 
-const makeOpenGraphForRoute = async (route, operatorQuery) => {
+const makeOpenGraphForRoute = async (route, isGrab) => {
   const isCrowdstart = route.tags.includes('crowdstart')
   const urlPath = isCrowdstart ? `crowdstart/${route.id}/detail` : `route/${route.id}`
   const verb = isCrowdstart ? 'Crowdstart' : 'Book'
-  const app = operatorQuery.operator === 'grab' ? 'GrabShuttle' : 'Beeline'
-  const smallHero = operatorQuery.operator === 'grab'
+  const app = isGrab ? 'GrabShuttle' : 'Beeline'
+  const subdomain = isGrab ? 'grabshuttle' : 'app'
+  const smallHero = isGrab
     ? 'https://app.beeline.sg/grab/mstile-310x310.png'
     : 'https://www.beeline.sg/images/fb_hero_small.png'
   const payload = {
-    operatorQuery: operatorQuery ? `?${querystring.stringify(operatorQuery)}` : '',
+    subdomain,
     smallHero,
     urlPath,
     verb,
@@ -45,7 +46,7 @@ const makeOpenGraphForRoute = async (route, operatorQuery) => {
 
 const gmtToSGTString = dateTimeString => dateTimeString.replace('Z', '+0800')
 
-const makeRouteBanner = async (route, operatorQuery) => {
+const makeRouteBanner = async (route, isGrab) => {
   const isCrowdstart = route.tags.includes('crowdstart')
   const firstStopTime = new Date(route.trip.tripStops[0].time)
   const tripDate = new Date(gmtToSGTString(route.trip.date))
@@ -58,8 +59,7 @@ const makeRouteBanner = async (route, operatorQuery) => {
       number: route.label.substring(1),
       location: isMorning ? route.from : route.to,
     },
-    height: (operatorQuery.operator === 'grab') ? 479 : 630,
-    bannerPath: (operatorQuery.operator === 'grab')
+    bannerPath: isGrab
       ? 'https://www.beeline.sg/images/fb_gs_hero_large.jpg'
       : 'https://www.beeline.sg/images/fb_hero_large.png',
   }
