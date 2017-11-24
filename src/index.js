@@ -30,7 +30,7 @@ const listener = async (req, res) => {
   const { url } = req
   const { query, pathname } = parse(url, true)
 
-  const isGrab = query.operator === 'grab'
+  const isGrab = query.operator === 'grab' || req.headers.host === 'grabshuttle.beeline.sg'
   const [robotAgent] = (req.headers['user-agent'] || '').match(CRAWLER_USER_AGENTS) || []
   if (robotAgent && isIndexableTab(url)) {
     console.log(`Receiving request from ${req.headers['user-agent']}`)
@@ -40,7 +40,7 @@ const listener = async (req, res) => {
       res.end(`${url} not found`)
     } else {
       const payload =
-        await axios.get(`${ROBOTS_URL}/routes/${routeId}`).then(r => makeOpenGraphForRoute(r.data, query))
+        await axios.get(`${ROBOTS_URL}/routes/${routeId}`).then(r => makeOpenGraphForRoute(r.data, isGrab))
       res.end(payload)
     }
   } else if (pathname === '/sitemap.txt') {
@@ -94,7 +94,7 @@ const listener = async (req, res) => {
       const { nextTripId } = route.indicativeTrip
       const trip = await axios.get(`${ROBOTS_URL}/trips/${nextTripId}`).then(r => r.data)
       Object.assign(route, { trip })
-      const payload = trip ? await makeRouteBanner(route, query) : undefined
+      const payload = trip ? await makeRouteBanner(route, isGrab) : undefined
       if (!payload) {
         res.writeHead(400, { 'Content-Type': 'text/plain' })
         res.end(`${url} refers to a route with no trip`)
