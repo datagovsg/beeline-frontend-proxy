@@ -30,7 +30,7 @@ const listener = async (req, res) => {
   const { url } = req
   const { query, pathname } = parse(url, true)
 
-  const isGrab = query.operator === 'grab'
+  const isGrab = query.operator === 'grab' || req.headers.host === 'grab-shuttle.beeline.sg'
   const [robotAgent] = (req.headers['user-agent'] || '').match(CRAWLER_USER_AGENTS) || []
   if (robotAgent && isIndexableTab(url)) {
     console.log(`Receiving request from ${req.headers['user-agent']}`)
