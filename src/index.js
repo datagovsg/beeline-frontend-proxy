@@ -77,7 +77,7 @@ const listener = async (req, res) => {
     </a>
   </ion-nav-view>
         `)
-        .replace('<head>', '<head><base href="/" />')
+        .replace('<head>', '<head><base href="/" /><meta property="description" content="Beeline Singapore - Book a ride on crowdsourced bus shuttles." />')
 
       res.end(response)
     }
