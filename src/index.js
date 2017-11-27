@@ -64,20 +64,29 @@ const listener = async (req, res) => {
       const response = payload
         .replace('<ion-nav-view></ion-nav-view>', `
   <ion-nav-view>
-    <h1>${h(routeData.label)}: ${h(routeData.from)} – ${h(routeData.to)}</h1>
-    <h2>${h(routeData.schedule)}</h2>
-    <p>Your browser is unable to display this page correctly.</p>
-    <p>Download the Beeline app for your phone and book this route today!</p>
+    <div style="opacity: 0.01">
+      <h1>${h(routeData.label)}: ${h(routeData.from)} – ${h(routeData.to)}</h1>
+      <h2>${h(routeData.schedule)}</h2>
+      <p>Your browser is unable to display this page correctly.</p>
+      <p>Download the Beeline app for your phone and book this route today!</p>
 
-    <a href="https://play.google.com/store/apps/details?id=sg.beeline&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1">
-      Download from Android Play
-    </a><br/>
-    <a href="https://itunes.apple.com/sg/app/beeline-sg/id1010615256?ls=1&mt=8">
-      Download from the App Store
-    </a>
+      <a href="https://play.google.com/store/apps/details?id=sg.beeline&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1">
+        Download from Android Play
+      </a><br/>
+      <a href="https://itunes.apple.com/sg/app/beeline-sg/id1010615256?ls=1&mt=8">
+        Download from the App Store
+      </a>
+    </div>
   </ion-nav-view>
         `)
-        .replace('<head>', '<head><base href="/" /><meta property="description" content="Beeline Singapore - Book a ride on crowdsourced shuttle buses." />')
+        .replace('<head>', `
+          <head><base href="/" />
+          <meta name="keywords" content="Beeline, Beeline Singapore , GrabShuttle,  book, routes, crowdstart,  crowdsourced,  shuttle,  bus service " />
+          <meta property="description" content="Label: ${h(routeData.label)}, From: ${h(routeData.from)},  To: ${h(routeData.to)}, Schedule: ${h(routeData.schedule)}" />
+        `)
+        .replace(/.*?<title>(.*?)<\/title>.*/,`
+          <title>${h(routeData.label)}: ${h(routeData.from)} – ${h(routeData.to)}</title>
+        `)
 
       res.end(response)
     }
