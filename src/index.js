@@ -67,7 +67,6 @@ const listener = async (req, res) => {
     <div style="opacity: 0.01">
       <h1>${h(routeData.label)}: ${h(routeData.from)} – ${h(routeData.to)}</h1>
       <h2>${h(routeData.schedule)}</h2>
-      <p>Your browser is unable to display this page correctly.</p>
       <p>Download the Beeline app for your phone and book this route today!</p>
 
       <a href="https://play.google.com/store/apps/details?id=sg.beeline&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1">
