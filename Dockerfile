@@ -13,5 +13,6 @@ COPY . .
 RUN mkdir logs
 
 EXPOSE 10000
+ENV PORT 10000
 
 CMD node src/index.js
