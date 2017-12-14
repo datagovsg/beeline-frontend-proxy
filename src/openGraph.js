@@ -2,7 +2,6 @@ const fs = require('fs')
 const Handlebars = require('handlebars')
 const path = require('path')
 const _ = require('lodash')
-const querystring = require('querystring')
 
 const htmlFrom = async (payload, templateFileName) => {
   const templateText = fs.readFileSync(

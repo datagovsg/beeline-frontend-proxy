@@ -2,11 +2,9 @@ const assert = require('assert')
 const http = require('http')
 const axios = require('axios')
 const httpProxy = require('http-proxy')
-const svg2png = require('svg2png')
 const { parse } = require('url')
 const {
   makeOpenGraphForRoute,
-  makeRouteBanner,
   makeRouteSitemap,
 } = require('./openGraph')
 
@@ -83,7 +81,7 @@ const listener = async (req, res) => {
           <meta name="keywords" content="Beeline, Beeline Singapore , GrabShuttle,  book, routes, crowdstart,  crowdsourced,  shuttle,  bus service " />
           <meta property="description" content="Label: ${h(routeData.label)}, From: ${h(routeData.from)},  To: ${h(routeData.to)}, Schedule: ${h(routeData.schedule)}" />
         `)
-        .replace(/.*?<title>(.*?)<\/title>.*/,`
+        .replace(/.*?<title>(.*?)<\/title>.*/, `
           <title>${h(routeData.label)}: ${h(routeData.from)} – ${h(routeData.to)}</title>
         `)
 
@@ -98,25 +96,10 @@ const listener = async (req, res) => {
       res.writeHead(404, { 'Content-Type': 'text/plain' })
       res.end(`${url} not found`)
     } else {
-      const route = await axios.get(`${ROBOTS_URL}/routes/${routeId}?includeIndicative=true&includeTrips=false`).then(r => r.data)
-      const { nextTripId } = route.indicativeTrip
-      const trip = await axios.get(`${ROBOTS_URL}/trips/${nextTripId}`).then(r => r.data)
-      Object.assign(route, { trip })
-      const payload = trip ? await makeRouteBanner(route, isGrab) : undefined
-      if (!payload) {
-        res.writeHead(400, { 'Content-Type': 'text/plain' })
-        res.end(`${url} refers to a route with no trip`)
-      } else {
-        const [, ext] = url.match(/\.(.*)$/) || []
-        if (ext === 'png') {
-          res.setHeader('Content-Type', 'image/png')
-          const png = await svg2png(Buffer.from(payload, 'utf8'))
-          res.end(png)
-        } else {
-          res.setHeader('Content-Type', 'image/svg+xml')
-          res.end(payload)
-        }
-      }
+      const imageUrl = isGrab
+        ? 'https://www.beeline.sg/images/fb_gs_hero_large.jpg'
+        : 'https://www.beeline.sg/images/fb_hero_large.png'
+      proxy.web(req, res, { ignorePath: true, target: imageUrl })
     }
   } else {
     proxy.web(req, res, { ignorePath: false, target: BACKEND_URL })
