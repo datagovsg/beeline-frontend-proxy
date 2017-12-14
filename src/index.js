@@ -99,7 +99,9 @@ const listener = async (req, res) => {
       const imageUrl = isGrab
         ? 'https://www.beeline.sg/images/fb_gs_hero_large.jpg'
         : 'https://www.beeline.sg/images/fb_hero_large.png'
-      proxy.web(req, res, { ignorePath: true, target: imageUrl })
+      const image = await axios.get(imageUrl, { responseType: 'arraybuffer' }).then(r => r.data)
+      res.writeHead(200, { 'Content-Type': 'image/png' })
+      res.end(image)
     }
   } else {
     proxy.web(req, res, { ignorePath: false, target: BACKEND_URL })
