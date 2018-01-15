@@ -18,8 +18,9 @@
     "axios": "^0.16.2",
     "dispatch": "^1.0.1",
     "handlebars": "^4.0.10",
-    "http-proxy": "^1.16.2",
     "lodash": "^4.17.4",
+    "querystring": "^0.2.0",
+    "serverless": "^1.25.0",
     "svg2png": "^4.1.1"
   },
   "devDependencies": {
