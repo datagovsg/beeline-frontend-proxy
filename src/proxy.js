@@ -69,7 +69,10 @@ module.exports = ({ url, headers }) => {
       })
   } else if (isTabPath(url) || pathname === '/') {
     return axios.get(BACKEND_URL + (isGrab ? '/grab.html' : ''))
-      .then(r => ({ body: r.data.replace('<head>', '<head><base href="/" />') }))
+      .then(r => ({
+        headers: { 'Content-Type': r.headers['content-type'] },
+        body: r.data.replace('<head>', '<head><base href="/" />'),
+      }))
   } else if (isRouteBanner(url)) {
     const [routeId] = url.match(/\d+/) || []
     if (!routeId) {
@@ -88,7 +91,7 @@ module.exports = ({ url, headers }) => {
   return axios
     .get(
       BACKEND_URL + url,
-      url.match(/\.(png|(woff|ttf)2?(\?.+)?)$/) ? { responseType: 'arraybuffer' } : {} // eslint-disable-line
+      url.match(/\.(ico|png|gif|(woff|ttf)2?(\?.+)?)$/) ? { responseType: 'arraybuffer' } : {} // eslint-disable-line
     )
     .catch(({ response }) => response)
     .then((response) => {
