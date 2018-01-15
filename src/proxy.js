@@ -88,7 +88,7 @@ module.exports = ({ url, headers }) => {
   return axios
     .get(
       BACKEND_URL + url,
-      url.match(/\.(png|(woff|ttf)2?(\?.+)?)$/) ? { responseType: 'arraybuffer' } : {},
+      url.match(/\.(png|(woff|ttf)2?(\?.+)?)$/) ? { responseType: 'arraybuffer' } : {} // eslint-disable-line
     )
     .catch(({ response }) => response)
     .then((response) => {
