@@ -15,7 +15,7 @@ provider:
 functions:
   lambda:
     handler: src/lambda.handler
-    timeout: 12
+    timeout: 30
     cors: true
     events:
       - http: ANY /
