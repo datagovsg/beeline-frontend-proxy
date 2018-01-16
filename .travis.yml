@@ -1,25 +1,17 @@
-language: python
-cache:
-  pip: true
+language: node_js
+node_js:
+  - '9'
 branches:
   only:
     - production
     - master
 git:
   depth: 3
-
-install:
-  - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH"
-  - export BEELINE_VENV=$PWD/virtualenvironment
-  - virtualenv $BEELINE_VENV
-  - $BEELINE_VENV/bin/pip install --upgrade awsebcli
-  - mkdir -p ~/.aws
-  - echo "[default]" > ~/.aws/config
-  - echo "aws_access_key_id=$AWS_ACCESS_KEY_ID" >> ~/.aws/config
-  - echo "region=ap-southeast-1" >> ~/.aws/config
-  - echo "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY" >> ~/.aws/config
-  - mkdir -p .elasticbeanstalk
-  - sed -i -e "s/@TRAVIS_BRANCH/$TRAVIS_BRANCH/g" eb-config.yml
-  - mv eb-config.yml .elasticbeanstalk/config.yml
 script:
-  - $BEELINE_VENV/bin/eb deploy beeline-frontend-proxy-$TRAVIS_BRANCH --verbose --label $TRAVIS_COMMIT --message "$TRAVIS_COMMIT_MESSAGE" --timeout 25
+  -  if [ "$TRAVIS_EVENT_TYPE" == "push" ] && [ "$TRAVIS_BRANCH" == "master" ]; then
+     npx serverless deploy;
+     fi
+
+  -  if [ "$TRAVIS_EVENT_TYPE" == "push" ] && [ "$TRAVIS_BRANCH" == "production" ]; then
+     npx serverless deploy -v -s prod;
+     fi

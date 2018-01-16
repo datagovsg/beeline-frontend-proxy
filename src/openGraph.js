@@ -3,10 +3,10 @@ const Handlebars = require('handlebars')
 const path = require('path')
 const _ = require('lodash')
 
-const htmlFrom = async (payload, templateFileName) => {
+const htmlFrom = (payload, templateFileName) => {
   const templateText = fs.readFileSync(
     path.join(path.dirname(module.filename), `../static/${templateFileName}`),
-    'utf8',
+    'utf8' // eslint-disable-line
   )
   const template = Handlebars.compile(templateText)
   return template(payload)
@@ -24,7 +24,7 @@ const makeRouteSitemap = (data) => {
     .join('\n')
 }
 
-const makeOpenGraphForRoute = async (route, isGrab) => {
+const makeOpenGraphForRoute = (route, isGrab) => {
   const isCrowdstart = route.tags.includes('crowdstart')
   const urlPath = isCrowdstart ? `crowdstart/${route.id}/detail` : `route/${route.id}`
   const verb = isCrowdstart ? 'Crowdstart' : 'Book'
@@ -45,7 +45,7 @@ const makeOpenGraphForRoute = async (route, isGrab) => {
 
 const gmtToSGTString = dateTimeString => dateTimeString.replace('Z', '+0800')
 
-const makeRouteBanner = async (route, isGrab) => {
+const makeRouteBanner = (route, isGrab) => {
   const isCrowdstart = route.tags.includes('crowdstart')
   const firstStopTime = new Date(route.trip.tripStops[0].time)
   const tripDate = new Date(gmtToSGTString(route.trip.date))
