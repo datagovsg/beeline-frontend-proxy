@@ -6,7 +6,7 @@ const proxy = require('./proxy')
 const reqFrom = (event) => {
   const qs = querystring.stringify(event.queryParameters)
   return {
-    headers: _.mapKeys(event.headers, k => k.toLowerCase()),
+    headers: _.mapKeys(event.headers, (v, k) => k.toLowerCase()),
     url: event.path + (qs ? `?${qs}` : ''),
   }
 }
