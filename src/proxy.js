@@ -88,6 +88,7 @@ module.exports = ({ url, headers }) => {
       }))
   }
 
+  console.log(`GET ${url}`)
   return axios
     .get(
       BACKEND_URL + url,
@@ -96,8 +97,11 @@ module.exports = ({ url, headers }) => {
     .catch(({ response }) => response)
     .then((response) => {
       const contentType = response.headers['content-type']
-      const body = response.data && contentType.startsWith('application/json')
-        ? JSON.stringify(response.data) : response.data
+      const stringifyJSON = response.data && (
+        contentType.startsWith('application/json') ||
+        url.endsWith('apple-app-site-association')
+      )
+      const body = stringifyJSON ? JSON.stringify(response.data) : response.data
       return {
         statusCode: response.status,
         headers: { 'Content-Type': contentType },
