@@ -48,15 +48,15 @@ module.exports = ({ url, headers }) => {
     if (!routeId) {
       return notFound(url)
     }
-    const payloadPromise = axios.get(BACKEND_URL + (isGrab ? '/grab.html' : '')).then(r => r.data)
+    const payloadPromise = axios.get(BACKEND_URL + (isGrab ? '/grab.html' : ''))
     const routeDataPromise = routeId
       ? axios.get(`${ROBOTS_URL}/routes/${routeId}`).then(r => r.data)
       : Promise.resolve(undefined)
 
     return Promise.all([payloadPromise, routeDataPromise])
-      .then(([payload, routeData]) => {
+      .then(([{ data, headers: payloadHeaders }, routeData]) => {
         const h = rawStr => rawStr.replace(/[<>&]/g, i => `&#${i.charCodeAt(0)};`)
-        const body = payload
+        const body = data
           .replace('<head>', `
             <head><base href="/" />
             <meta name="keywords" content="Beeline, Beeline Singapore , GrabShuttle,  book, routes, crowdstart,  crowdsourced,  shuttle,  bus service " />
@@ -65,7 +65,10 @@ module.exports = ({ url, headers }) => {
           .replace(/.*?<title>(.*?)<\/title>.*/, `
             <title>${h(routeData.label)}: ${h(routeData.from)} – ${h(routeData.to)}</title>
           `)
-        return { body }
+        return {
+          headers: { 'Content-Type': payloadHeaders['content-type'] },
+          body,
+        }
       })
   } else if (isTabPath(url) || pathname === '/') {
     return axios.get(BACKEND_URL + (isGrab ? '/grab.html' : ''))
