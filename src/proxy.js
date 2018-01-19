@@ -102,7 +102,8 @@ module.exports = ({ url, headers }) => {
       const contentType = response.headers['content-type']
       const stringifyJSON = response.data && (
         contentType.startsWith('application/json') ||
-        url.endsWith('apple-app-site-association')
+        url.endsWith('apple-app-site-association') ||
+        url.endsWith('chcp.manifest')
       )
       const body = stringifyJSON ? JSON.stringify(response.data) : response.data
       return {
