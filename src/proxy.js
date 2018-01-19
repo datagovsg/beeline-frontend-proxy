@@ -95,21 +95,15 @@ module.exports = ({ url, headers }) => {
   return axios
     .get(
       BACKEND_URL + url,
-      url.match(/\.(ico|png|gif|(woff|ttf)2?(\?.+)?)$/) ? { responseType: 'arraybuffer' } : {} // eslint-disable-line
+      { responseType: 'arraybuffer' } // eslint-disable-line
     )
     .catch(({ response }) => response)
     .then((response) => {
       const contentType = response.headers['content-type']
-      const stringifyJSON = response.data && (
-        contentType.startsWith('application/json') ||
-        url.endsWith('apple-app-site-association') ||
-        url.endsWith('chcp.manifest')
-      )
-      const body = stringifyJSON ? JSON.stringify(response.data) : response.data
       return {
         statusCode: response.status,
         headers: { 'Content-Type': contentType },
-        body: body || '',
+        body: response.data || '',
       }
     })
 }
