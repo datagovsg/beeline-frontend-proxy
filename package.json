@@ -18,7 +18,7 @@
     "axios": "^0.16.2",
     "dispatch": "^1.0.1",
     "handlebars": "^4.0.10",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.11",
     "querystring": "^0.2.0"
   },
   "devDependencies": {
@@ -27,7 +27,7 @@
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.4.0",
-    "nodemon": "^1.17.3",
-    "serverless": "^1.29.1"
+    "nodemon": "^1.18.4",
+    "serverless": "^1.32.0"
   }
 }
