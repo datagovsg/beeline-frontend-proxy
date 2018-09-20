@@ -13,7 +13,7 @@
     "lint": "eslint --fix src/"
   },
   "author": "Government Technology Agency of Singapore (https://www.tech.gov.sg)",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "dependencies": {
     "axios": "^0.16.2",
     "dispatch": "^1.0.1",
